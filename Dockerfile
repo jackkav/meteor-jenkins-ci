@@ -13,4 +13,3 @@ ADD https://updates.jenkins-ci.org/download/plugins/plain-credentials/latest/pla
 USER root
 RUN chown -R jenkins /usr/share/jenkins/ref/plugins
 RUN curl https://install.meteor.com/ | sh
-
