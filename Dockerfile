@@ -1,4 +1,4 @@
-FROM index.alauda.cn/library/jenkins
+FROM jenkins
 #MAINTAINER Jack Kavanagh (http://jackkav.github.io)
 #RUN mkdir -p /usr/share/jenkins/ref/plugins
 #ADD https://updates.jenkins-ci.org/download/plugins/ws-cleanup/latest/ws-cleanup.hpi /usr/share/jenkins/ref/plugins/ws-cleanup.hpi
