@@ -9,7 +9,7 @@ USER root
 #RUN chown -R jenkins /usr/share/jenkins/ref/plugins
 
 RUN apt-get update \
-        && apt-get install -y build-essential python-dev
+        && apt-get install -y build-essential python-dev libmysqlclient-dev
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 8.1.1
 
@@ -23,4 +23,4 @@ RUN set -ex \
         && rm -rf /usr/src/python ~/.cache
 
 # install "virtualenv", since the vast majority of users of this image will want it
-RUN pip install --no-cache-dir numpy scikit-learn keras pandas
+RUN pip install --no-cache-dir numpy scikit-learn keras pandas mysql-python
