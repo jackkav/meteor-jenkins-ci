@@ -4,19 +4,23 @@
 #android-files
 FROM index.alauda.cn/jackkav/meteor-jenkins-ci:node4
 MAINTAINER Jack Kavanagh (http://jackkav.github.io)
-# Install Deps
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 python curl
 
-# Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz --quiet http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && tar xzf android-sdk.tgz && rm -f android-sdk.tgz && chown -R root.root android-sdk-linux
+USER root
 
-ENV ANDROID_HOME /opt/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+# Installing Android SDK
+RUN dpkg --add-architecture i386
+RUN apt-get -y update
+RUN apt-get -y install libc6-dev-i386 libc6-i386 zlib1g:i386
 
-# Install sdk elements
-COPY tools /opt/tools
-ENV PATH ${PATH}:/opt/tools
-RUN ["/opt/tools/android-accept-licenses.sh", "android update sdk --all --force --no-ui --filter platform-tools,tools,build-tools-21,build-tools-21.0.1,build-tools-21.0.2,build-tools-21.1,build-tools-21.1.1,build-tools-21.1.2,build-tools-22,build-tools-22.0.1,build-tools-23.0.2,android-21,android-22,android-23,addon-google_apis_x86-google-21,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services,sys-img-armeabi-v7a-android-21"]
+RUN cd /usr/local/ && curl -L -O http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && tar xf android-sdk_r24.4.1-linux.tgz
 
-RUN which adb
-RUN which android
+# Environment variables
+ENV ANDROID_HOME /usr/local/android-sdk-linux
+ENV ANDROID_SDK /usr/local/android-sdk-linux
+ENV ANDROID_SDK_COMPONENTS tools,platform-tools,android-23,build-tools-23.0.2,sys-img-armeabi-v7a-android-23,extra-android-m2repository,extra-google-m2repository
+
+RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter tools --no-ui --force -a
+RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --filter platform-tools --no-ui --force -a
+RUN echo y | /usr/local/android-sdk-linux/tools/android update sdk --no-ui --all --filter "${ANDROID_SDK_COMPONENTS}" --force
+
+USER jenkins
